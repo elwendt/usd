@@ -15,17 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
 from django.views.generic import RedirectView
+
 
 # Use static() to add url mapping to serve static files during development (only)
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('home/', include('home.urls')),
-    path('', RedirectView.as_view(url='/home/')),
+    url(r'^admin/', admin.site.urls),
+    url(r'^home/', include('home.urls')),
+    path('', RedirectView.as_view(url='/home/', permanent=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
@@ -34,5 +35,7 @@ urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
-
+urlpatterns += [
+    url(r'^health/?', include('health_check.urls')),
+]
 
